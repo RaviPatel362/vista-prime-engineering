@@ -73,8 +73,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   verification: {
-    // Replace YOUR_VERIFICATION_CODE with the actual code from Google Search Console
-    google: "YOUR_VERIFICATION_CODE",
+    google: "plU5K4t5oMDXJsaSZg7Yl8kYl82-hvGg14_MtIK4oIo",
   },
 };
 
