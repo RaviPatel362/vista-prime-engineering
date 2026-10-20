@@ -1,0 +1,242 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-oswald);
+  --font-mono: var(--font-roboto-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* VPE brand palette — royal blue + safety orange (matches logo)
+     Logo colours:
+       - Royal blue: #5B65F2 (icon + "Vista Prime Engineering" wordmark)
+       - Safety orange: #F26522 (VPE monogram)
+       - Background: #F4F4F4 (off-white cool gray)
+  */
+  --radius: 0.5rem;
+
+  /* Page background matches logo backdrop */
+  --background: oklch(0.97 0.003 250);
+  --foreground: oklch(0.18 0.03 265);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.03 265);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.03 265);
+
+  /* Primary CTA colour = safety orange (logo VPE monogram colour) */
+  --primary: oklch(0.66 0.19 38);
+  --primary-foreground: oklch(0.99 0.002 60);
+
+  --secondary: oklch(0.95 0.008 250);
+  --secondary-foreground: oklch(0.22 0.03 265);
+
+  --muted: oklch(0.95 0.008 250);
+  --muted-foreground: oklch(0.45 0.02 260);
+
+  --accent: oklch(0.94 0.04 265);
+  --accent-foreground: oklch(0.22 0.03 265);
+
+  --destructive: oklch(0.55 0.22 28);
+
+  --border: oklch(0.88 0.008 250);
+  --input: oklch(0.9 0.008 250);
+  /* Ring defaults to brand blue so focus rings carry the logo accent */
+  --ring: oklch(0.55 0.21 268);
+
+  --chart-1: oklch(0.55 0.21 268);
+  --chart-2: oklch(0.66 0.19 38);
+  --chart-3: oklch(0.45 0.04 60);
+  --chart-4: oklch(0.72 0.15 70);
+  --chart-5: oklch(0.35 0.02 60);
+
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.18 0.03 265);
+  --sidebar-primary: oklch(0.66 0.19 38);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.96 0 0);
+  --sidebar-accent-foreground: oklch(0.18 0.03 265);
+  --sidebar-border: oklch(0.9 0 0);
+  --sidebar-ring: oklch(0.55 0.21 268);
+
+  /* ---------- Brand-specific custom tokens (kept as vpe-* for clarity) ---------- */
+  /* vpe-amber → safety orange (logo VPE monogram colour)
+     Kept the variable name to minimise churn in existing components;
+     functionally it is the brand accent for CTAs and highlights. */
+  --vpe-amber: oklch(0.66 0.19 38);            /* #F26522 — safety orange */
+  --vpe-amber-dark: oklch(0.55 0.18 38);       /* deeper orange for text on light */
+
+  /* vpe-charcoal → deep navy (used as dark section backgrounds) */
+  --vpe-charcoal: oklch(0.22 0.04 264);        /* deep navy */
+  --vpe-charcoal-deep: oklch(0.15 0.035 268);  /* deeper navy — hero/footer bg */
+
+  /* NEW: brand blue token — logo icon + wordmark colour */
+  --vpe-blue: oklch(0.55 0.21 268);            /* #5B65F2 — royal blue */
+  --vpe-blue-dark: oklch(0.42 0.20 268);       /* deeper royal blue */
+  --vpe-blue-soft: oklch(0.92 0.04 268);       /* very light blue tint */
+
+  /* vpe-steel retained for any legacy reference */
+  --vpe-steel: oklch(0.46 0.02 250);
+}
+
+.dark {
+  --background: oklch(0.15 0.035 268);
+  --foreground: oklch(0.97 0.003 60);
+  --card: oklch(0.2 0.04 266);
+  --card-foreground: oklch(0.97 0.003 60);
+  --popover: oklch(0.2 0.04 266);
+  --popover-foreground: oklch(0.97 0.003 60);
+  --primary: oklch(0.66 0.19 38);
+  --primary-foreground: oklch(0.15 0.035 268);
+  --secondary: oklch(0.26 0.035 266);
+  --secondary-foreground: oklch(0.97 0.003 60);
+  --muted: oklch(0.26 0.035 266);
+  --muted-foreground: oklch(0.68 0.012 265);
+  --accent: oklch(0.28 0.05 266);
+  --accent-foreground: oklch(0.97 0.003 60);
+  --destructive: oklch(0.65 0.22 25);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.66 0.19 38);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv01", "cv11";
+  }
+
+  /* Display font helper for industrial headings */
+  .font-display {
+    font-family: var(--font-display), var(--font-inter), sans-serif;
+    letter-spacing: 0.01em;
+  }
+  .font-mono {
+    font-family: var(--font-roboto-mono), var(--font-inter), monospace;
+  }
+}
+
+/* ----- Reusable industrial surface utilities ----- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(91, 101, 242, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(91, 101, 242, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dark .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+}
+
+.bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgba(91, 101, 242, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(91, 101, 242, 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Subtle dot grid for hero backgrounds */
+.bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Orange glow used on hero / CTA sections (now using brand orange) */
+.bg-amber-glow {
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    oklch(0.66 0.19 38 / 0.20),
+    transparent 70%
+  );
+}
+
+/* Blue glow variant for headers / accents */
+.bg-blue-glow {
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    oklch(0.55 0.21 268 / 0.22),
+    transparent 70%
+  );
+}
+
+/* Metal-shine sweep animation for hero accents */
+@keyframes shine-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shine {
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: shine-sweep 3.5s linear infinite;
+}
+
+/* Custom scrollbar for any overflow lists */
+.styled-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.styled-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.styled-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+}
+.dark .styled-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shine {
+    animation: none;
+  }
+}
