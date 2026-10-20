@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
+import { assetPath } from "@/lib/asset"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from "@/components/ui/sheet"
 
@@ -56,7 +57,7 @@ export default function Navbar() {
           <Link href="#top" className="group flex items-center gap-3">
             <span className="relative inline-flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-[var(--vpe-blue)]/30 transition-shadow group-hover:ring-[var(--vpe-blue)]/60">
               <img
-                src="/logo.png"
+                src={assetPath("/logo.png")}
                 alt="Vista Prime Engineering logo"
                 width={48}
                 height={48}
@@ -108,7 +109,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between">
                 <SheetTitle className="flex items-center gap-3">
                   <img
-                    src="/logo.png"
+                    src={assetPath("/logo.png")}
                     alt="VPE logo"
                     width={40}
                     height={40}

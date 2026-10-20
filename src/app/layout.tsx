@@ -23,6 +23,8 @@ const robotoMono = Roboto_Mono({
   display: "swap",
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ""
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://vistaprimeengineering.com"),
   title: "Vista Prime Engineering | Precision CNC Turning, VMC Milling & Machining",
@@ -45,12 +47,12 @@ export const metadata: Metadata = {
   publisher: "Vista Prime Engineering",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
-      { url: "/logo-192.png", type: "image/png", sizes: "192x192" },
+      { url: `${basePath}/favicon.svg`, type: "image/svg+xml" },
+      { url: `${basePath}/favicon-32.png`, type: "image/png", sizes: "32x32" },
+      { url: `${basePath}/logo-192.png`, type: "image/png", sizes: "192x192" },
     ],
-    apple: "/logo-192.png",
-    shortcut: "/favicon-32.png",
+    apple: `${basePath}/logo-192.png`,
+    shortcut: `${basePath}/favicon-32.png`,
   },
   openGraph: {
     title: "Vista Prime Engineering | Precision Today, Better Tomorrow",
@@ -59,7 +61,7 @@ export const metadata: Metadata = {
     siteName: "Vista Prime Engineering",
     type: "website",
     locale: "en_IN",
-    images: ["/logo-192.png"],
+    images: [`${basePath}/logo-192.png`],
   },
   twitter: {
     card: "summary_large_image",

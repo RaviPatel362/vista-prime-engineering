@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Phone, Mail, MapPin } from "lucide-react"
+import { assetPath } from "@/lib/asset"
 
 const FOOTER_NAV = [
   { label: "About", href: "#about" },
@@ -37,7 +38,7 @@ export default function Footer() {
           <div className="md:col-span-5">
             <Link href="#top" className="inline-flex items-center gap-3">
               <img
-                src="/logo.png"
+                src={assetPath("/logo.png")}
                 alt="Vista Prime Engineering logo"
                 width={56}
                 height={56}

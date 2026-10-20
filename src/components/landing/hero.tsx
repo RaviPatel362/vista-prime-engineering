@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowRight, ChevronDown, Cog, Drill, Hammer, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { assetPath } from "@/lib/asset"
 
 export default function Hero() {
   return (
@@ -29,7 +30,7 @@ export default function Hero() {
             {/* Brand badge: real logo + tagline */}
             <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur">
               <img
-                src="/logo-192.png"
+                src={assetPath("/logo-192.png")}
                 alt="VPE logo"
                 width={24}
                 height={24}
