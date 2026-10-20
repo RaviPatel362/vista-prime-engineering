@@ -26,7 +26,7 @@ const robotoMono = Roboto_Mono({
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vistaprimeengineering.com"),
+  metadataBase: new URL("https://ravipatel362.github.io/vista-prime-engineering"),
   title: "Vista Prime Engineering | Precision CNC Turning, VMC Milling & Machining",
   description:
     "Vista Prime Engineering (VPE) delivers high-precision CNC Turning, VMC Milling, and Precision Machining services. Precision Today... Better Tomorrow. Partner with us for long-term manufacturing excellence.",
@@ -71,6 +71,10 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  verification: {
+    // Replace YOUR_VERIFICATION_CODE with the actual code from Google Search Console
+    google: "YOUR_VERIFICATION_CODE",
   },
 };
 
