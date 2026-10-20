@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import { Phone, Mail, MapPin, User, Clock, ArrowRight, Loader2 } from "lucide-react"
+import { Phone, Mail, Clock, User, ArrowRight, Loader2, Calendar, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -15,14 +15,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-// Contact details — easily editable for the owner.
-// Replace the placeholder values with real VPE contact information before going live.
+// ============================================================================
+// IMPORTANT: Replace this email with your actual VPE email address.
+// This is where all form submissions will be delivered.
+// ============================================================================
+const FORM_RECIPIENT_EMAIL = "vistaprimeengineering@gmail.com"
+
+// Contact details — kept in sync with footer.tsx
 const CONTACT = {
-  phone: "+91 84018 32511", // ← Replace with actual VPE phone
-  // altPhone: "+91 84018 32511", // ← Replace with alternate number (or remove)
-  email: "vistaprimeengineering@gmail.com", // ← Replace with actual email
-  address: "09, SHIVEN ENCLAVE ATLADRA, RAILWAY CROSSING, Manjalpur, Vadodara, Gujarat 390011", // ← Replace with actual address
+  phone: "+91 84018 32511",
+  email: "vistaprimeengineering@gmail.com",
   proprietor: "Ruchit Patel",
+  hours: "Mon – Sat · 09:30 – 18:30 IST",
 }
 
 const CONTACT_CARDS = [
@@ -30,7 +34,7 @@ const CONTACT_CARDS = [
     icon: Phone,
     label: "Call Us",
     value: CONTACT.phone,
-    // sub: `Alt: ${CONTACT.altPhone}`,
+    sub: "Direct line · Ruchit Patel",
     href: `tel:${CONTACT.phone.replace(/\s/g, "")}`,
   },
   {
@@ -40,6 +44,20 @@ const CONTACT_CARDS = [
     sub: "Drawing-based quotes welcome",
     href: `mailto:${CONTACT.email}`,
   },
+  {
+    icon: Clock,
+    label: "Working Hours",
+    value: "Mon – Sat",
+    sub: CONTACT.hours,
+    href: undefined,
+  },
+  {
+    icon: Calendar,
+    label: "Workshop Visits",
+    value: "By Appointment",
+    sub: "Call ahead to schedule a visit",
+    href: `tel:${CONTACT.phone.replace(/\s/g, "")}`,
+  },
 ]
 
 const SERVICE_OPTIONS = [
@@ -47,7 +65,6 @@ const SERVICE_OPTIONS = [
   "VMC Milling",
   "Precision Machining",
   "Long-term Partnership / Bulk Order",
-  "Drawing Review / Consultation",
   "Other",
 ]
 
@@ -59,41 +76,73 @@ export default function Contact() {
     e.preventDefault()
     setSubmitting(true)
 
-    // Simulate async submit — in a real deploy, swap this for a fetch() call
-    // to a form backend (Formspree, Google Forms, custom API route, etc.)
-    await new Promise((r) => setTimeout(r, 800))
-
     const form = e.currentTarget
-    const data = new FormData(form)
-    const name = String(data.get("name") || "")
-    const phone = String(data.get("phone") || "")
-    const service = String(data.get("service") || "")
-    const message = String(data.get("message") || "")
+    const formData = new FormData(form)
+    const name = String(formData.get("name") || "")
+    const phone = String(formData.get("phone") || "")
+    const email = String(formData.get("email") || "")
+    const service = String(formData.get("service") || "")
+    const message = String(formData.get("message") || "")
 
-    // Build a mailto link as a no-backend fallback so submissions still land
-    // somewhere the proprietor can read even without a backend.
-    const subject = encodeURIComponent(`New enquiry from ${name || "website visitor"}`)
-    const body = encodeURIComponent(
-      [
-        `Name: ${name}`,
-        `Phone: ${phone}`,
-        `Service interested in: ${service}`,
-        ``,
-        `Message:`,
-        message || "(no message)",
-      ].join("\n"),
-    )
-    const mailto = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`
+    const honeypot = String(formData.get("_honey") || "")
+    if (honeypot) {
+      setSubmitting(false)
+      toast({
+        title: "Enquiry submitted",
+        description: "Thank you — we'll get back to you within 24 hours.",
+      })
+      form.reset()
+      return
+    }
 
-    setSubmitting(false)
-    toast({
-      title: "Enquiry ready to send",
-      description: "Your email client should open with the details pre-filled.",
-    })
+    try {
+      const response = await fetch(
+        `https://formsubmit.co/ajax/${encodeURIComponent(FORM_RECIPIENT_EMAIL)}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            _subject: `New VPE enquiry from ${name || "website visitor"}`,
+            _template: "table",
+            _captcha: "false",
+            _autoresponse: `Hello ${name},\n\nThank you for contacting Vista Prime Engineering. We have received your enquiry and Ruchit Patel will respond within 24 hours.\n\nBest regards,\nVista Prime Engineering\nPrecision Today · Better Tomorrow`,
+            Name: name,
+            Phone: phone,
+            Email: email,
+            "Service interested in": service,
+            Message: message,
+          }),
+        }
+      )
 
-    // Open mail client so the user can hit send.
-    window.location.href = mailto
-    form.reset()
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.success === "true" || data.success === true) {
+        toast({
+          title: "Enquiry sent successfully",
+          description: "Thank you — Ruchit Patel will respond within 24 hours.",
+        })
+        form.reset()
+      } else {
+        throw new Error(data.message || "Submission failed")
+      }
+    } catch (error) {
+      console.error("Form submission error:", error)
+      toast({
+        title: "Could not send enquiry",
+        description: `Please try again, or call us directly at ${CONTACT.phone}`,
+        variant: "destructive",
+      })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -116,14 +165,15 @@ export default function Contact() {
         </div>
 
         <div className="mt-12 grid lg:grid-cols-12 gap-8">
-          {/* Left: contact cards + map */}
+          {/* Left: contact cards + proprietor + trust badge */}
           <div className="lg:col-span-5 space-y-4">
+            {/* 4-card grid */}
             <div className="grid sm:grid-cols-2 gap-3">
               {CONTACT_CARDS.map((card) => {
                 const Card = (
                   <div className="group flex h-full flex-col gap-2 rounded-xl border border-border bg-card p-5 transition-all hover:border-[var(--vpe-amber)]/50 hover:shadow-sm">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--vpe-amber)]/10 ring-1 ring-[var(--vpe-amber)]/30">
+                      <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--vpe-amber)]/10 ring-1 ring-[var(--vpe-amber)]/30">
                         <card.icon className="h-5 w-5 text-[var(--vpe-amber-dark)]" />
                       </span>
                       <div className="min-w-0">
@@ -150,10 +200,10 @@ export default function Contact() {
 
             {/* Proprietor strip */}
             <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
-              <div className="h-12 w-12 rounded-full bg-[var(--vpe-charcoal-deep)] text-[var(--vpe-amber)] flex items-center justify-center ring-1 ring-[var(--vpe-amber)]/40">
+              <div className="h-12 w-12 rounded-full bg-[var(--vpe-charcoal-deep)] text-[var(--vpe-amber)] flex items-center justify-center ring-1 ring-[var(--vpe-amber)]/40 flex-shrink-0">
                 <User className="h-5 w-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">
                   Proprietor
                 </p>
@@ -161,37 +211,23 @@ export default function Contact() {
                   {CONTACT.proprietor}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Direct line available on request
+                  Personally reviews every enquiry
                 </p>
               </div>
             </div>
 
-            {/* Address block */}
-            <div className="rounded-xl border border-border bg-card p-5">
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--vpe-amber-dark)]" />
-                <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">
-                    Workshop Address
-                  </p>
-                  <p className="mt-1 text-sm text-foreground leading-relaxed">
-                    {CONTACT.address}
-                  </p>
-                </div>
+            {/* Trust / privacy note */}
+            <div className="flex items-start gap-3 rounded-xl border border-[var(--vpe-blue)]/20 bg-[var(--vpe-blue-soft)]/30 p-4">
+              <ShieldCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--vpe-blue-dark)]" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-foreground">
+                  Your information stays private
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+                  Submissions are delivered directly to Ruchit Patel — never
+                  shared, sold, or added to a marketing list.
+                </p>
               </div>
-              <div id="map" className="mt-4 overflow-hidden rounded-lg border border-border">
-                <iframe
-                  title="VPE workshop location"
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=72.5%2C22.9%2C73.0%2C23.4&layer=mapnik"
-                  className="h-44 w-full"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-              <p className="mt-2 text-[11px] text-muted-foreground">
-                Map shown is approximate. Update with the actual workshop
-                coordinates for production.
-              </p>
             </div>
           </div>
 
@@ -207,6 +243,15 @@ export default function Contact() {
               </p>
 
               <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                {/* Honeypot — hidden from humans, visible to bots */}
+                <input
+                  type="text"
+                  name="_honey"
+                  style={{ display: "none" }}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name *</Label>
@@ -232,7 +277,7 @@ export default function Contact() {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <div className="space-y-2">
+                  <div className="space-y-2 min-w-0">
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
@@ -242,13 +287,13 @@ export default function Contact() {
                       autoComplete="email"
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 min-w-0">
                     <Label htmlFor="service">Service interested in</Label>
                     <Select name="service">
-                      <SelectTrigger id="service">
+                      <SelectTrigger id="service" className="w-full">
                         <SelectValue placeholder="Select a service" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-72">
                         {SERVICE_OPTIONS.map((opt) => (
                           <SelectItem key={opt} value={opt}>
                             {opt}
@@ -271,14 +316,14 @@ export default function Contact() {
 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
                   <p className="text-xs text-muted-foreground">
-                    Submitting opens your email client with the details
-                    pre-filled — a no-backend fallback for GitHub Pages hosting.
+                    Submissions are delivered to Ruchit Patel directly. We
+                    typically respond within 24 hours.
                   </p>
                   <Button type="submit" size="lg" className="group self-start sm:self-auto" disabled={submitting}>
                     {submitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Preparing…
+                        Sending…
                       </>
                     ) : (
                       <>

@@ -143,9 +143,22 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    /* Force scrollbar to always be visible on <html> — reserves the scrollbar
+       space so the page never reflows horizontally when a dropdown/dialog
+       locks body scroll. */
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "ss01", "cv01", "cv11";
+    /* Unconditionally neutralize any padding/margin compensation that
+       react-remove-scroll adds inline when locking body scroll. Without
+       this, the body content shifts ~15px whenever a Radix Select/Dialog
+       opens or closes. */
+    padding-right: 0 !important;
+    margin-right: 0 !important;
   }
 
   /* Display font helper for industrial headings */

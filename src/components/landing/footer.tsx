@@ -20,9 +20,8 @@ const FOOTER_SERVICES = [
 
 // Keep in sync with contact.tsx — replace before going live.
 const CONTACT = {
-  phone: "+91 98765 43210",
-  email: "info@vistaprimeengineering.com",
-  address: "Plot No. 00, Industrial Estate, City, State — 000000, India",
+  phone: "+91 84018 32511",
+  email: "vistaprimeengineering@gmail.com",
 }
 
 export default function Footer() {
