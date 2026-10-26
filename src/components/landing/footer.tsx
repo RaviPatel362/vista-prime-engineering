@@ -123,7 +123,7 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--vpe-amber)]" />
                 <span className="text-white/60">
-                  Industrial Estate, India
+                  Makarpura GIDC Vadoara, Gujarat, India
                 </span>
               </li>
             </ul>
